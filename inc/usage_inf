@@ -1,0 +1,14 @@
+c3vsRamLoader - Loader the RAM of KREDO-3VS  (QNX 4.25)
+
+c3vsRamLoader [options | operands]...
+Options:
+-p progress bar - display of upload progress (enabled by default)
+-d device       - device selection ( 0 - elcus (by default) / 1 - potok) 
+-c channel      - number of channel (need only for potok, 0 by default)
+-t tmkPath      - path for elcus tmk (/dev/tmk0 by default)
+-w write        - dowload file to RAM
+-r run          - start at the specified address
+-v verbose      - display of diagnostic messages (enabled by default)
+-l loadAddr     - download the program at address (hex 0x1000 by default)
+-s startAddr    - start address  (hex 0x1000 by default)
+-f file         - filename for input (file.bin by default)
