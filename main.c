@@ -48,20 +48,20 @@ enum bool {FALSE,TRUE};
 //******************************************************************************
 //******************************************************************************
 // FUNCTIONS
-void GetOptions(int argc, char** argv);  //Загрузка начальных параметров
-void PrintResult(char result);           //Отображение результатов работы функций
+void GetOptions(int argc, char** argv);  //╨Ч╨░╨│╤А╤Г╨╖╨║╨░ ╨╜╨░╤З╨░╨╗╤М╨╜╤Л╤Е ╨┐╨░╤А╨░╨╝╨╡╤В╤А╨╛╨▓
+void PrintResult(char result);           //╨Ю╤В╨╛╨▒╤А╨░╨╢╨╡╨╜╨╕╨╡ ╤А╨╡╨╖╤Г╨╗╤М╤В╨░╤В╨╛╨▓ ╤А╨░╨▒╨╛╤В╤Л ╤Д╤Г╨╜╨║╤Ж╨╕╨╣
 //******************************************************************************
 //------------------------------------------------------------------------------
 //MAIN
 //------------------------------------------------------------------------------
 int main(int argc, char * argv[]) {
-  char errorCode; // код ошибки
+  char errorCode; // ╨║╨╛╨┤ ╨╛╤И╨╕╨▒╨║╨╕
   printf("Obraz Loader [%s %s]\n",__DATE__,__TIME__);
   
-  //Загрузка начальных параметров
+  //╨Ч╨░╨│╤А╤Г╨╖╨║╨░ ╨╜╨░╤З╨░╨╗╤М╨╜╤Л╤Е ╨┐╨░╤А╨░╨╝╨╡╤В╤А╨╛╨▓
   GetOptions(argc,argv);
   
-  // Открываем TMK элкуса или потока 
+  // ╨Ю╤В╨║╤А╤Л╨▓╨░╨╡╨╝ TMK ╤Н╨╗╨║╤Г╤Б╨░ ╨╕╨╗╨╕ ╨┐╨╛╤В╨╛╨║╨░ 
   if(option.device)
     errorCode = PInit_KK(option.channel);
   else
@@ -70,16 +70,16 @@ int main(int argc, char * argv[]) {
     PrintResult(errorCode);
   if(errorCode != TMK_OPEN_OK)  { FileClose(); return(EXIT_FAILURE); }
   
-  // Загрузка данных в ОЗУ прибора
+  // ╨Ч╨░╨│╤А╤Г╨╖╨║╨░ ╨┤╨░╨╜╨╜╤Л╤Е ╨▓ ╨Ю╨Ч╨г ╨┐╤А╨╕╨▒╨╛╤А╨░
   if(option.write) {
     
-    // Открываем файл для чтения
+    // ╨Ю╤В╨║╤А╤Л╨▓╨░╨╡╨╝ ╤Д╨░╨╣╨╗ ╨┤╨╗╤П ╤З╤В╨╡╨╜╨╕╤П
     errorCode = FileOpen(option.fileName);
     if(option.verbose)
       PrintResult(errorCode);
     if(errorCode != FILE_OPEN_OK)  return(EXIT_FAILURE);
     
-    // Инициализация прибора и перевод в технологический режим
+    // ╨Ш╨╜╨╕╤Ж╨╕╨░╨╗╨╕╨╖╨░╤Ж╨╕╤П ╨┐╤А╨╕╨▒╨╛╤А╨░ ╨╕ ╨┐╨╡╤А╨╡╨▓╨╛╨┤ ╨▓ ╤В╨╡╤Е╨╜╨╛╨╗╨╛╨│╨╕╤З╨╡╤Б╨║╨╕╨╣ ╤А╨╡╨╢╨╕╨╝
     errorCode = InitializationDevice(); 
     if(option.verbose)
       PrintResult(errorCode);
@@ -90,7 +90,7 @@ int main(int argc, char * argv[]) {
       return(EXIT_FAILURE); 
     }
     
-    // Загрузка данных в ОЗУ прибора
+    // ╨Ч╨░╨│╤А╤Г╨╖╨║╨░ ╨┤╨░╨╜╨╜╤Л╤Е ╨▓ ╨Ю╨Ч╨г ╨┐╤А╨╕╨▒╨╛╤А╨░
     errorCode = ObrazFileLoad(option.loadAddr);
     if(option.verbose)
       PrintResult(errorCode);
@@ -102,7 +102,7 @@ int main(int argc, char * argv[]) {
     }
   }
   
-  // Старт загруженных данных
+  // ╨б╤В╨░╤А╤В ╨╖╨░╨│╤А╤Г╨╢╨╡╨╜╨╜╤Л╤Е ╨┤╨░╨╜╨╜╤Л╤Е
   if(option.run) {
     errorCode = RunOZU(option.startAddr);
     if(option.verbose)
@@ -124,22 +124,22 @@ int main(int argc, char * argv[]) {
 //END MAIN
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-// Анализ аргументов 
+// ╨Р╨╜╨░╨╗╨╕╨╖ ╨░╤А╨│╤Г╨╝╨╡╨╜╤В╨╛╨▓ 
 //------------------------------------------------------------------------------
 void GetOptions(int argc, char** argv) {
   int errflag = 0;
   int arg;
   
-  option.progressBar=TRUE;        //-p Отображение хода выполнения
-  option.device = FALSE;          //-m устройство milstd ( 0 - elcus/ 1 - potok) default = 0
-  option.channel = 0;             //-c номер канала модуля поток (только для потока)
-  option.tmkPath = NULL;          //-t путь к tmk (/dev/tmk0 по умолчанию)
-  option.write = FALSE;           //-w загрузка ОЗУ прибора
-  option.run = FALSE;             //-R Старт прибора 
-  option.verbose = TRUE;          //-v Вывод хода работы программы
-  option.loadAddr = LOAD_ADDR;    //-l Адрес загрузки образа в прибор
-  option.startAddr = START_ADDR;  //-b Адрес старта прибора
-  option.fileName=NULL;           //-f Имя файла
+  option.progressBar=TRUE;        //-p ╨Ю╤В╨╛╨▒╤А╨░╨╢╨╡╨╜╨╕╨╡ ╤Е╨╛╨┤╨░ ╨▓╤Л╨┐╨╛╨╗╨╜╨╡╨╜╨╕╤П
+  option.device = FALSE;          //-m ╤Г╤Б╤В╤А╨╛╨╣╤Б╤В╨▓╨╛ milstd ( 0 - elcus/ 1 - potok) default = 0
+  option.channel = 0;             //-c ╨╜╨╛╨╝╨╡╤А ╨║╨░╨╜╨░╨╗╨░ ╨╝╨╛╨┤╤Г╨╗╤П ╨┐╨╛╤В╨╛╨║ (╤В╨╛╨╗╤М╨║╨╛ ╨┤╨╗╤П ╨┐╨╛╤В╨╛╨║╨░)
+  option.tmkPath = NULL;          //-t ╨┐╤Г╤В╤М ╨║ tmk (/dev/tmk0 ╨┐╨╛ ╤Г╨╝╨╛╨╗╤З╨░╨╜╨╕╤О)
+  option.write = FALSE;           //-w ╨╖╨░╨│╤А╤Г╨╖╨║╨░ ╨Ю╨Ч╨г ╨┐╤А╨╕╨▒╨╛╤А╨░
+  option.run = FALSE;             //-R ╨б╤В╨░╤А╤В ╨┐╤А╨╕╨▒╨╛╤А╨░ 
+  option.verbose = TRUE;          //-v ╨Т╤Л╨▓╨╛╨┤ ╤Е╨╛╨┤╨░ ╤А╨░╨▒╨╛╤В╤Л ╨┐╤А╨╛╨│╤А╨░╨╝╨╝╤Л
+  option.loadAddr = LOAD_ADDR;    //-l ╨Р╨┤╤А╨╡╤Б ╨╖╨░╨│╤А╤Г╨╖╨║╨╕ ╨╛╨▒╤А╨░╨╖╨░ ╨▓ ╨┐╤А╨╕╨▒╨╛╤А
+  option.startAddr = START_ADDR;  //-b ╨Р╨┤╤А╨╡╤Б ╤Б╤В╨░╤А╤В╨░ ╨┐╤А╨╕╨▒╨╛╤А╨░
+  option.fileName=NULL;           //-f ╨Ш╨╝╤П ╤Д╨░╨╣╨╗╨░
   
   while((arg = getopt(argc, argv, "pd:c:t:wrvl:s:f:")) != -1) { 
     switch( arg ) {
@@ -181,7 +181,7 @@ void GetOptions(int argc, char** argv) {
   return;
 }  
 //------------------------------------------------------------------------------
-//END Анализ аргументов 
+//END ╨Р╨╜╨░╨╗╨╕╨╖ ╨░╤А╨│╤Г╨╝╨╡╨╜╤В╨╛╨▓ 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 //Print Error
@@ -206,19 +206,19 @@ void PrintResult(char result){
   }
 #else  
    switch(result) {
-    case FILE_OPEN_OK:                  printf("Файл успешно открыт\n");            break;
-    case FILE_OPEN_FAIL:                printf("Ошибка открытия файла\n");          break;
-    case EXPRESS_TEST_OK:               printf("Экспресс тест прибора пройден\n");  break;
-    case EXPRESS_TEST_FAIL:             printf("Ошибка экспресс теста прибора\n");  break;
-    case INITIALIZATION_DEVICE_OK:      printf("Инициализация прибора пройдена\n"); break;
-    case INITIALIZATION_DEVICE_FAIL:    printf("Ошибка инициализации прибора\n");   break;
-    case DATA_LOAD_OK:                  printf("Данные успешно загружены\n");       break;
-    case DATA_LOAD_FAIL:                printf("Ошибка загрузки данных\n");         break;
-    case RUN_OK:                        printf("Старт прибора пройден\n");          break;
-    case RUN_FAIL:                      printf("Ошибка старта прибора\n");          break;
-    case TMK_OPEN_OK:                   printf("Подключение к плате выполнено\n");  break;
-    case TMK_OPEN_FAIL:                 printf("Ошибка подключения к плате\n");     break;
-    default:                            printf("Неопределенный код ошибки\n");      break;
+    case FILE_OPEN_OK:                  printf("╨д╨░╨╣╨╗ ╤Г╤Б╨┐╨╡╤И╨╜╨╛ ╨╛╤В╨║╤А╤Л╤В\n");            break;
+    case FILE_OPEN_FAIL:                printf("╨Ю╤И╨╕╨▒╨║╨░ ╨╛╤В╨║╤А╤Л╤В╨╕╤П ╤Д╨░╨╣╨╗╨░\n");          break;
+    case EXPRESS_TEST_OK:               printf("╨н╨║╤Б╨┐╤А╨╡╤Б╤Б ╤В╨╡╤Б╤В ╨┐╤А╨╕╨▒╨╛╤А╨░ ╨┐╤А╨╛╨╣╨┤╨╡╨╜\n");  break;
+    case EXPRESS_TEST_FAIL:             printf("╨Ю╤И╨╕╨▒╨║╨░ ╤Н╨║╤Б╨┐╤А╨╡╤Б╤Б ╤В╨╡╤Б╤В╨░ ╨┐╤А╨╕╨▒╨╛╤А╨░\n");  break;
+    case INITIALIZATION_DEVICE_OK:      printf("╨Ш╨╜╨╕╤Ж╨╕╨░╨╗╨╕╨╖╨░╤Ж╨╕╤П ╨┐╤А╨╕╨▒╨╛╤А╨░ ╨┐╤А╨╛╨╣╨┤╨╡╨╜╨░\n"); break;
+    case INITIALIZATION_DEVICE_FAIL:    printf("╨Ю╤И╨╕╨▒╨║╨░ ╨╕╨╜╨╕╤Ж╨╕╨░╨╗╨╕╨╖╨░╤Ж╨╕╨╕ ╨┐╤А╨╕╨▒╨╛╤А╨░\n");   break;
+    case DATA_LOAD_OK:                  printf("╨Ф╨░╨╜╨╜╤Л╨╡ ╤Г╤Б╨┐╨╡╤И╨╜╨╛ ╨╖╨░╨│╤А╤Г╨╢╨╡╨╜╤Л\n");       break;
+    case DATA_LOAD_FAIL:                printf("╨Ю╤И╨╕╨▒╨║╨░ ╨╖╨░╨│╤А╤Г╨╖╨║╨╕ ╨┤╨░╨╜╨╜╤Л╤Е\n");         break;
+    case RUN_OK:                        printf("╨б╤В╨░╤А╤В ╨┐╤А╨╕╨▒╨╛╤А╨░ ╨┐╤А╨╛╨╣╨┤╨╡╨╜\n");          break;
+    case RUN_FAIL:                      printf("╨Ю╤И╨╕╨▒╨║╨░ ╤Б╤В╨░╤А╤В╨░ ╨┐╤А╨╕╨▒╨╛╤А╨░\n");          break;
+    case TMK_OPEN_OK:                   printf("╨Я╨╛╨┤╨║╨╗╤О╤З╨╡╨╜╨╕╨╡ ╨║ ╨┐╨╗╨░╤В╨╡ ╨▓╤Л╨┐╨╛╨╗╨╜╨╡╨╜╨╛\n");  break;
+    case TMK_OPEN_FAIL:                 printf("╨Ю╤И╨╕╨▒╨║╨░ ╨┐╨╛╨┤╨║╨╗╤О╤З╨╡╨╜╨╕╤П ╨║ ╨┐╨╗╨░╤В╨╡\n");     break;
+    default:                            printf("╨Э╨╡╨╛╨┐╤А╨╡╨┤╨╡╨╗╨╡╨╜╨╜╤Л╨╣ ╨║╨╛╨┤ ╨╛╤И╨╕╨▒╨║╨╕\n");      break;
   }
 #endif 
 }
